@@ -1,3 +1,9 @@
+function createImage(imageSrc) {
+  const image = new Image()
+  image.src = imageSrc
+  return image
+}
+
 function randomIntFromRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -12,5 +18,20 @@ function distance(x1, y1, x2, y2) {
 
   return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2))
 }
-
-module.exports = { randomIntFromRange, randomColor, distance }
+function playAudio(src){
+    myAudio = new Audio(src); 
+    if (typeof myAudio.loop == 'boolean')
+    {
+        myAudio.loop = true;
+    }
+    else
+    {
+        myAudio.addEventListener('ended', function() {
+          alert('done')
+            this.currentTime = 0;
+            this.play();
+        }, false);
+    }
+      myAudio.play();
+}
+module.exports = { randomIntFromRange, randomColor, distance, createImage, playAudio }
