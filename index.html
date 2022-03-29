@@ -12,9 +12,28 @@
         justify-content: center;
         height: 100vh;
       }
+      div{
+      position: fixed;
+        background-color: rgba(25, 25, 25, 0.5);
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-items: center;
+      }
+      .invisible {
+        display: none;
+          
+      }
     </style>
-  <link rel="shortcut icon" href="favicon.ico"></head>
+<link rel="shortcut icon" href="favicon.ico"></head>
   <body>
+    <div>
+      <button
+        style="display: block; margin: auto;"
+      >
+        Start Game
+      </button>
+    </div>
     <canvas></canvas>
   <script src="./js/canvas.bundle.js"></script></body>
 </html>
