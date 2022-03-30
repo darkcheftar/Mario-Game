@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Canvas Boilerplate | Chris Courses</title>
+    <title>Get Back Home</title>
     <style>
       body {
         margin: 0;
@@ -12,7 +12,7 @@
         justify-content: center;
         height: 100vh;
       }
-      div{
+      .start{
       position: fixed;
         background-color: rgba(25, 25, 25, 0.5);
         height: 100vh;
@@ -21,13 +21,33 @@
         justify-items: center;
         z-index: 2;
       }
+      #fullscreen{
+        height:100vh;
+        width: 100vw;
+      }
       .invisible {
         display: none;
-
+      }
+      .startbutton{
+        display: block; margin: auto;
+        height:100px;width: 200px;
+         border-radius: 16px;
+         font: 30px Arial, sans-serif;
+         background: #124552;
+        color: #58bab3;
+      }
+      .startbutton:hover{
+        background: #2da0bd;
+        color: #15312f;
       }
       canvas{
         position: fixed;
         z-index: 0;
+        height: 100%;
+        margin: auto;
+        top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
       }
       #con{
         z-index: 1;
@@ -35,14 +55,14 @@
     </style>
 <link rel="shortcut icon" href="favicon.ico"></head>
   <body>
-    <div>
-      <button
-        style="display: block; margin: auto;"
-      >
+    <div class="start">
+      <button class="startbutton">
         Start Game
       </button>
     </div>
+    <div id="fullscreen">
     <canvas></canvas>
     <canvas id="con"></canvas>
+  </div>
   <script src="./js/canvas.bundle.js"></script></body>
 </html>

@@ -793,6 +793,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/img/rocket.png":
+/*!****************************!*\
+  !*** ./src/img/rocket.png ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "7f7febd1daffaeef60213d1cff5848a7.png");
+
+/***/ }),
+
 /***/ "./src/img/spriteRunLeft.png":
 /*!***********************************!*\
   !*** ./src/img/spriteRunLeft.png ***!
@@ -871,13 +884,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _img_hills_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../img/hills.png */ "./src/img/hills.png");
 /* harmony import */ var _img_star_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../img/star.png */ "./src/img/star.png");
 /* harmony import */ var _img_background_png__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../img/background.png */ "./src/img/background.png");
-/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./main */ "./src/js/main.js");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils */ "./src/js/utils.js");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_utils__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _img_audio_mp3__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../img/audio.mp3 */ "./src/img/audio.mp3");
-/* harmony import */ var _img_jump_mp3__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../img/jump.mp3 */ "./src/img/jump.mp3");
-/* harmony import */ var _img_collect_mp3__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../img/collect.mp3 */ "./src/img/collect.mp3");
-/* harmony import */ var canvas_confetti__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! canvas-confetti */ "./node_modules/canvas-confetti/dist/confetti.module.mjs");
+/* harmony import */ var _img_rocket_png__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../img/rocket.png */ "./src/img/rocket.png");
+/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./main */ "./src/js/main.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils */ "./src/js/utils.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_utils__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _img_audio_mp3__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../img/audio.mp3 */ "./src/img/audio.mp3");
+/* harmony import */ var _img_jump_mp3__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../img/jump.mp3 */ "./src/img/jump.mp3");
+/* harmony import */ var _img_collect_mp3__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../img/collect.mp3 */ "./src/img/collect.mp3");
+/* harmony import */ var canvas_confetti__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! canvas-confetti */ "./node_modules/canvas-confetti/dist/confetti.module.mjs");
+
 
 
 
@@ -896,6 +911,7 @@ canvas.height = 570;
 con.width = 1024;
 con.height = 570;
 var maxScrolloffset = 16000;
+var music = Object(_utils__WEBPACK_IMPORTED_MODULE_6__["playAudio"])(_img_audio_mp3__WEBPACK_IMPORTED_MODULE_7__["default"], true);
 var platformImage;
 var starImage;
 var jumpAudio, collectAudio;
@@ -903,6 +919,7 @@ var player = null;
 var platforms = [];
 var stars = [];
 var genericObjects = [];
+var rocketobj;
 var lastKey;
 var keys = {
   right: {
@@ -915,57 +932,19 @@ var keys = {
 var scrollOffset = 0;
 
 function init() {
-  platformImage = Object(_utils__WEBPACK_IMPORTED_MODULE_5__["createImage"])(_img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
-  starImage = Object(_utils__WEBPACK_IMPORTED_MODULE_5__["createImage"])(_img_star_png__WEBPACK_IMPORTED_MODULE_2__["default"]);
-  jumpAudio = new Audio(_img_jump_mp3__WEBPACK_IMPORTED_MODULE_7__["default"]);
-  collectAudio = new Audio(_img_collect_mp3__WEBPACK_IMPORTED_MODULE_8__["default"]);
-  player = new _main__WEBPACK_IMPORTED_MODULE_4__["Player"](canvas); //   platforms = [
-  //     new Platform({
-  //       x:
-  //         platformImage.width * 4 +
-  //         300 -
-  //         2 +
-  //         platformImage.width -
-  //         platformSmallTallImage.width,
-  //       y: 270,
-  //       image: createImage(platformSmallTall),
-  //       canvas,
-  //     }),
-  //     new Platform({ x: -1, y: 470, image: platformImage, canvas }),
-  //     new Platform({
-  //       x: platformImage.width - 3,
-  //       y: 470,
-  //       image: platformImage,
-  //       canvas,
-  //     }),
-  //     new Platform({
-  //       x: platformImage.width * 2 + 100,
-  //       y: 470,
-  //       image: platformImage,
-  //       canvas,
-  //     }),
-  //     new Platform({
-  //       x: platformImage.width * 3 + 300,
-  //       y: 470,
-  //       image: platformImage,
-  //       canvas,
-  //     }),
-  //     new Platform({
-  //       x: platformImage.width * 4 + 300 - 2,
-  //       y: 470,
-  //       image: platformImage,
-  //       canvas,
-  //     }),
-  //     new Platform({
-  //       x: platformImage.width * 5 + 700 - 2,
-  //       y: 470,
-  //       image: platformImage,
-  //       canvas,
-  //     }),
-  //   ];
-
+  platformImage = Object(_utils__WEBPACK_IMPORTED_MODULE_6__["createImage"])(_img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  starImage = Object(_utils__WEBPACK_IMPORTED_MODULE_6__["createImage"])(_img_star_png__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  jumpAudio = new Audio(_img_jump_mp3__WEBPACK_IMPORTED_MODULE_8__["default"]);
+  collectAudio = new Audio(_img_collect_mp3__WEBPACK_IMPORTED_MODULE_9__["default"]);
+  player = new _main__WEBPACK_IMPORTED_MODULE_5__["Player"](canvas);
   platforms = [];
-  platforms.push(new _main__WEBPACK_IMPORTED_MODULE_4__["Platform"]({
+  platforms.push(new _main__WEBPACK_IMPORTED_MODULE_5__["Platform"]({
+    x: -301,
+    y: 470,
+    image: platformImage,
+    canvas: canvas
+  }));
+  platforms.push(new _main__WEBPACK_IMPORTED_MODULE_5__["Platform"]({
     x: -1,
     y: 470,
     image: platformImage,
@@ -973,9 +952,9 @@ function init() {
   }));
   var o = 0;
 
-  for (var i = 0; i < 29; i++) {
+  for (var i = 0; i < 18; i++) {
     o += 100;
-    platforms.push(new _main__WEBPACK_IMPORTED_MODULE_4__["Platform"]({
+    platforms.push(new _main__WEBPACK_IMPORTED_MODULE_5__["Platform"]({
       x: 700 + (platformImage.width + 300) * i - 2,
       y: 470 - Math.random() * 100,
       image: platformImage,
@@ -983,31 +962,43 @@ function init() {
     }));
   }
 
-  platforms.push(new _main__WEBPACK_IMPORTED_MODULE_4__["Platform"]({
-    x: 700 + platformImage.width * 30 - 2,
+  new _main__WEBPACK_IMPORTED_MODULE_5__["Platform"]({
+    x: 700 + (platformImage.width * 18 + 300 * 17) - 2,
     y: 470 - Math.random() * 100,
     image: platformImage,
     canvas: canvas
-  }));
+  });
   stars = platforms.map(function (platform) {
-    return new _main__WEBPACK_IMPORTED_MODULE_4__["Star"]({
-      x: Object(_utils__WEBPACK_IMPORTED_MODULE_5__["randomIntFromRange"])(platform.position.x, platform.position.x + platform.width),
+    return new _main__WEBPACK_IMPORTED_MODULE_5__["Star"]({
+      x: Object(_utils__WEBPACK_IMPORTED_MODULE_6__["randomIntFromRange"])(platform.position.x, platform.position.x + platform.width),
       y: platform.position.y - 100,
       image: starImage,
       canvas: canvas
     });
   });
-  genericObjects = [new _main__WEBPACK_IMPORTED_MODULE_4__["GenericObject"]({
+  genericObjects = [new _main__WEBPACK_IMPORTED_MODULE_5__["GenericObject"]({
     x: -1,
     y: -1,
-    image: Object(_utils__WEBPACK_IMPORTED_MODULE_5__["createImage"])(_img_background_png__WEBPACK_IMPORTED_MODULE_3__["default"]),
+    image: Object(_utils__WEBPACK_IMPORTED_MODULE_6__["createImage"])(_img_background_png__WEBPACK_IMPORTED_MODULE_3__["default"]),
     canvas: canvas
-  }), new _main__WEBPACK_IMPORTED_MODULE_4__["GenericObject"]({
+  }), new _main__WEBPACK_IMPORTED_MODULE_5__["GenericObject"]({
     x: -1,
     y: -1,
-    image: Object(_utils__WEBPACK_IMPORTED_MODULE_5__["createImage"])(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"]),
+    image: Object(_utils__WEBPACK_IMPORTED_MODULE_6__["createImage"])(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"]),
     canvas: canvas
   })];
+  rocketobj = new _main__WEBPACK_IMPORTED_MODULE_5__["GenericObject"]({
+    x: platforms.at(-1).position.x + platforms[3].width / 2,
+    y: platforms.at(-1).position.y - 500,
+    image: Object(_utils__WEBPACK_IMPORTED_MODULE_6__["createImage"])(_img_rocket_png__WEBPACK_IMPORTED_MODULE_4__["default"]),
+    canvas: canvas
+  }); //headstart
+
+  platforms.forEach(function (platform) {
+    // scrollOffset += 14640;
+    platform.position.x += 300;
+  });
+  console.log(platforms);
   scrollOffset = 0;
 }
 
@@ -1024,6 +1015,7 @@ function animate() {
   stars.forEach(function (star) {
     if (star.visible) star.draw();
   });
+  rocketobj.draw();
   player.update();
 
   if (keys.right.pressed && player.position.x < 400) {
@@ -1046,6 +1038,7 @@ function animate() {
       genericObjects.forEach(function (genericObject) {
         genericObject.position.x -= player.speed * 0.66;
       });
+      rocketobj.position.x -= player.speed;
     } else if (keys.left.pressed && scrollOffset > 0) {
       scrollOffset -= player.speed;
       platforms.forEach(function (platform) {
@@ -1057,6 +1050,7 @@ function animate() {
       genericObjects.forEach(function (genericObject) {
         genericObject.position.x += player.speed * 0.66;
       });
+      rocketobj.position.x += player.speed;
     }
   } // console.log(scrollOffset);
   // star collision detection
@@ -1079,6 +1073,7 @@ function animate() {
   platforms.forEach(function (platform) {
     if (player.position.y + player.height <= platform.position.y && player.position.y + player.height + player.velocity.y >= platform.position.y && player.position.x + player.width >= platform.position.x && player.position.x <= platform.position.x + platform.width) {
       player.velocity.y = 0;
+      console.log(platforms.indexOf(platform));
     }
   }); // sprite switching
 
@@ -1102,8 +1097,10 @@ function animate() {
   } // win condition
 
 
-  if (scrollOffset > 2000) {
-    console.log("You win");
+  if (scrollOffset / maxScrolloffset > 0.95) {
+    window.dispatchEvent(new CustomEvent('conf'));
+    c.font = "100px Arial";
+    c.fillText('You Win!!!', canvas.width / 3, canvas.height / 2);
   } // lose condition
 
 
@@ -1117,14 +1114,10 @@ function animate() {
   c.fillRect(10, 10, scrollOffset / maxScrolloffset * 100, 10);
   c.font = "20px Arial";
   c.fillText("Stars: ".concat(player.score), 10, 50);
-
-  if (scrollOffset / maxScrolloffset > 0.95) {
-    window.dispatchEvent(new CustomEvent('conf'));
-  }
 }
 
 addEventListener('conf', function () {
-  var myConfetti = canvas_confetti__WEBPACK_IMPORTED_MODULE_9__["default"].create(con, {
+  var myConfetti = canvas_confetti__WEBPACK_IMPORTED_MODULE_10__["default"].create(con, {
     resize: true,
     useWorker: true
   });
@@ -1141,11 +1134,11 @@ addEventListener('conf', function () {
   once: true
 });
 document.querySelector('button').addEventListener('click', function () {
-  var div = document.querySelector('div');
+  var div = document.querySelector('.start');
   console.log('hi', div);
   div.classList.add('invisible');
-  canvas.requestFullscreen();
-  Object(_utils__WEBPACK_IMPORTED_MODULE_5__["playAudio"])(_img_audio_mp3__WEBPACK_IMPORTED_MODULE_6__["default"], true);
+  Object(_utils__WEBPACK_IMPORTED_MODULE_6__["fullscreen"])(document.getElementById('fullscreen'));
+  music.play();
   init();
 });
 init();
@@ -1192,7 +1185,18 @@ addEventListener("keydown", function (_ref) {
       break;
 
     case 'f':
-      Object(_utils__WEBPACK_IMPORTED_MODULE_5__["fullscreen"])(document.getElementById('display'));
+      Object(_utils__WEBPACK_IMPORTED_MODULE_6__["fullscreen"])(document.getElementById('fullscreen'));
+      break;
+
+    case 'm':
+      if (!music.paused) {
+        music.pause();
+        music.currentTime = 0;
+      } else {
+        music.play();
+      }
+
+      break;
   }
 
   console.log(keys.right.pressed);
@@ -1249,6 +1253,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _img_spriteStandRight_png__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../img/spriteStandRight.png */ "./src/img/spriteStandRight.png");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils */ "./src/js/utils.js");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_utils__WEBPACK_IMPORTED_MODULE_4__);
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
@@ -1400,9 +1408,24 @@ var Star = /*#__PURE__*/function (_StationaryObject2) {
       image: image,
       canvas: canvas
     });
+    _this.length = 50;
+    _this.count = 0;
+    _this.oy = y;
+    _this.offset = Math.random() * 0.3;
     _this.visible = true;
     return _this;
   }
+
+  _createClass(Star, [{
+    key: "draw",
+    value: function draw() {
+      this.count += 0.03;
+
+      _get(_getPrototypeOf(Star.prototype), "draw", this).call(this);
+
+      this.position.y = this.oy + Math.sin(this.offset + this.count) * this.length;
+    }
+  }]);
 
   return Star;
 }(StationaryObject);
@@ -1483,7 +1506,7 @@ function playAudio(src) {
     }
   }
 
-  myAudio.play();
+  return myAudio;
 }
 
 function fullscreen(canvas) {
