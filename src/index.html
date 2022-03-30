@@ -19,10 +19,18 @@
         width: 100vw;
         display: flex;
         justify-items: center;
+        z-index: 2;
       }
       .invisible {
         display: none;
-          
+
+      }
+      canvas{
+        position: fixed;
+        z-index: 0;
+      }
+      #con{
+        z-index: 1;
       }
     </style>
 </head>
@@ -35,5 +43,6 @@
       </button>
     </div>
     <canvas></canvas>
+    <canvas id="con"></canvas>
   </body>
 </html>

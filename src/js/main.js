@@ -118,4 +118,4 @@ class GenericObject {
     this.c.drawImage(this.image, this.position.x, this.position.y);
   }
 }
-export { Platform, Player, GenericObject };
+export { Platform, Player, GenericObject,Star };

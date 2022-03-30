@@ -34,4 +34,13 @@ function playAudio(src){
     }
       myAudio.play();
 }
-module.exports = { randomIntFromRange, randomColor, distance, createImage, playAudio }
+function fullscreen(canvas) {
+  if (document.fullscreenElement) {
+    document.exitFullscreen()
+      .then(() => console.log("Document Exited from Full screen mode"))
+      .catch((err) => console.error(err))
+  } else {
+    canvas.requestFullscreen();
+  }
+}
+module.exports = { randomIntFromRange, randomColor, distance, createImage, playAudio, fullscreen }

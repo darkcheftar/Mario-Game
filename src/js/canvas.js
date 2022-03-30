@@ -1,23 +1,29 @@
 import platform from "../img/platform.png";
 import hills from "../img/hills.png";
+import star from '../img/star.png';
 import background from "../img/background.png";
 import platformSmallTall from "../img/platformSmallTall.png";
-import { Platform, Player, GenericObject } from "./main";
-import { createImage, playAudio } from "./utils";
-import audio from '../img/audio.mp3'
+import { Platform, Player, GenericObject, Star } from "./main";
+import { createImage, fullscreen, playAudio } from "./utils";
 
+import audio from '../img/audio.mp3'
+import confetti from 'canvas-confetti';
 
 const canvas = document.querySelector("canvas");
-
+const con = document.querySelector('#con');
 const c = canvas.getContext("2d");
 
 canvas.width = 1024;
 canvas.height = 570;
+con.width = 1024;
+con.height = 570;
 let maxScrolloffset = 16000;
 let platformImage;
+let starImage;
 let platformSmallTallImage;
 let player = null;
 let platforms = [];
+let stars = [];
 let genericObjects = [];
 
 let lastKey;
@@ -35,6 +41,7 @@ let scrollOffset = 0;
 
 function init() {
   platformImage = createImage(platform);
+  starImage = createImage(star);
   let platformSmallTallImage = createImage(platformSmallTall);
   player = new Player(canvas);
 //   platforms = [
@@ -86,11 +93,11 @@ function init() {
 //       canvas,
 //     }),
 //   ];
-
+stars = [new Star({x:100, y:100,image:starImage,canvas})];
 platforms = [];
 platforms.push(new Platform({ x: -1, y: 470, image: platformImage, canvas }))
     let o=0;
-  for(let i=0;i<30;i++){
+  for(let i=0;i<29;i++){
       o+=100;
       platforms.push(
       new Platform({
@@ -98,8 +105,15 @@ platforms.push(new Platform({ x: -1, y: 470, image: platformImage, canvas }))
         y: 470-Math.random()*100,
         image: platformImage,
         canvas,
-      }),)
+      }))
   }
+  platforms.push(
+    new Platform({
+      x:  700+ (platformImage.width) * 30    - 2,
+      y: 470-Math.random()*100,
+      image: platformImage,
+      canvas,
+    }),)
   genericObjects = [
     new GenericObject({
       x: -1,
@@ -130,6 +144,9 @@ function animate() {
   platforms.forEach((platform) => {
     platform.draw();
   });
+  stars.forEach(star=>{
+    star.draw();
+  })
   player.update();
 
   if (keys.right.pressed && player.position.x < 400) {
@@ -224,12 +241,33 @@ function animate() {
   c.rect(10,10,100,10);
   c.stroke();
   c.fillRect(10,10,(scrollOffset/maxScrolloffset)*100,10);
+  if(scrollOffset/maxScrolloffset>0.95){
+    window.dispatchEvent(new CustomEvent('conf'));
+  }
 }
+
+addEventListener('conf',()=>{
+  
+    var myConfetti = confetti.create(con, {
+      resize: true,
+      useWorker: true
+    });
+    myConfetti({
+      particleCount: 100,
+      spread: 160
+      // any other options from the global
+      // confetti function
+    });
+    setTimeout(() => {
+      myConfetti.reset();
+    }, 1000);
+}, {once:true});
 document.querySelector('button').addEventListener('click',()=>{
     let div = document.querySelector('div');
       console.log('hi',div)
     div.classList.add('invisible')
-    playAudio(audio);
+    canvas.requestFullscreen();
+    // playAudio(audio);
     init();
 });
 init();
@@ -262,6 +300,8 @@ addEventListener("keydown", ({ key }) => {
       if(player.velocity.y==0)
       player.velocity.y -= 25;
       break;
+    case 'f':
+     fullscreen(document.getElementById('display'));
   }
 
   console.log(keys.right.pressed);
