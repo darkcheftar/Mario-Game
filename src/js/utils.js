@@ -18,8 +18,10 @@ function distance(x1, y1, x2, y2) {
 
   return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2))
 }
-function playAudio(src){
-    myAudio = new Audio(src); 
+
+function playAudio(src, loop=false){
+  myAudio = new Audio(src); 
+  if (loop){
     if (typeof myAudio.loop == 'boolean')
     {
         myAudio.loop = true;
@@ -32,6 +34,7 @@ function playAudio(src){
             this.play();
         }, false);
     }
+  }
       myAudio.play();
 }
 function fullscreen(canvas) {

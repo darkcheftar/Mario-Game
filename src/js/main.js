@@ -3,9 +3,11 @@ import spriteRunRight from "../img/spriteRunRight.png";
 import spriteStandLeft from "../img/spriteStandLeft.png";
 import spriteStandRight from "../img/spriteStandRight.png";
 import { createImage } from "./utils";
+
 const gravity = 1.5;
 class Player {
   constructor(canvas) {
+    this.score = 0;
     this.canvas = canvas;
     this.c = canvas.getContext("2d");
     this.speed = 10;
@@ -118,4 +120,5 @@ class GenericObject {
     this.c.drawImage(this.image, this.position.x, this.position.y);
   }
 }
-export { Platform, Player, GenericObject,Star };
+
+export { Platform, Player, GenericObject,Star};

@@ -2,11 +2,13 @@ import platform from "../img/platform.png";
 import hills from "../img/hills.png";
 import star from '../img/star.png';
 import background from "../img/background.png";
-import platformSmallTall from "../img/platformSmallTall.png";
-import { Platform, Player, GenericObject, Star } from "./main";
-import { createImage, fullscreen, playAudio } from "./utils";
+import { Platform, Player, GenericObject, Star} from "./main";
+import { createImage, fullscreen, playAudio,randomIntFromRange } from "./utils";
 
 import audio from '../img/audio.mp3'
+import jump from '../img/jump.mp3'
+import collect from '../img/collect.mp3'
+
 import confetti from 'canvas-confetti';
 
 const canvas = document.querySelector("canvas");
@@ -20,7 +22,7 @@ con.height = 570;
 let maxScrolloffset = 16000;
 let platformImage;
 let starImage;
-let platformSmallTallImage;
+let jumpAudio, collectAudio;
 let player = null;
 let platforms = [];
 let stars = [];
@@ -42,7 +44,8 @@ let scrollOffset = 0;
 function init() {
   platformImage = createImage(platform);
   starImage = createImage(star);
-  let platformSmallTallImage = createImage(platformSmallTall);
+  jumpAudio = new Audio(jump);
+  collectAudio = new Audio(collect);
   player = new Player(canvas);
 //   platforms = [
 //     new Platform({
@@ -93,7 +96,6 @@ function init() {
 //       canvas,
 //     }),
 //   ];
-stars = [new Star({x:100, y:100,image:starImage,canvas})];
 platforms = [];
 platforms.push(new Platform({ x: -1, y: 470, image: platformImage, canvas }))
     let o=0;
@@ -113,7 +115,8 @@ platforms.push(new Platform({ x: -1, y: 470, image: platformImage, canvas }))
       y: 470-Math.random()*100,
       image: platformImage,
       canvas,
-    }),)
+    }))
+    stars = platforms.map(platform=>new Star({x:randomIntFromRange(platform.position.x,platform.position.x+platform.width), y:platform.position.y-100,image:starImage,canvas}));
   genericObjects = [
     new GenericObject({
       x: -1,
@@ -145,7 +148,8 @@ function animate() {
     platform.draw();
   });
   stars.forEach(star=>{
-    star.draw();
+    if (star.visible)
+      star.draw();
   })
   player.update();
 
@@ -164,6 +168,11 @@ function animate() {
       platforms.forEach((platform) => {
         platform.position.x -= player.speed;
       });
+      stars.forEach(star=>{
+        if(star.visible){
+          star.position.x -= player.speed;
+        }
+      })
       genericObjects.forEach((genericObject) => {
         genericObject.position.x -= player.speed * 0.66;
       });
@@ -172,6 +181,9 @@ function animate() {
       platforms.forEach((platform) => {
         platform.position.x += player.speed;
       });
+      stars.forEach(star=>{
+        star.position.x += player.speed;
+      })
 
       genericObjects.forEach((genericObject) => {
         genericObject.position.x += player.speed * 0.66;
@@ -179,7 +191,26 @@ function animate() {
     }
   }
 
-  console.log(scrollOffset);
+  // console.log(scrollOffset);
+  // star collision detection
+  stars.forEach(star=>{
+    if( star.visible &&
+      player.position.x < star.position.x + star.width &&
+        player.position.x + player.width > star.position.x &&
+        player.position.y < star.position.y + star.height &&
+        player.height + player.position.y > star.position.y
+    ){
+      if(!collectAudio.paused){
+        collectAudio.pause();
+        collectAudio.currentTime = 0;
+      }
+      collectAudio.play();
+      star.visible = false;
+      player.score +=1;
+      console.log(player.score);
+
+    }
+  })
 
   // platform collision detection
   platforms.forEach((platform) => {
@@ -238,9 +269,12 @@ function animate() {
   if (player.position.y > canvas.height) {
     init();
   }
+  //stats
   c.rect(10,10,100,10);
   c.stroke();
   c.fillRect(10,10,(scrollOffset/maxScrolloffset)*100,10);
+  c.font = "20px Arial";
+  c.fillText(`Stars: ${player.score}`,10,50)
   if(scrollOffset/maxScrolloffset>0.95){
     window.dispatchEvent(new CustomEvent('conf'));
   }
@@ -267,7 +301,7 @@ document.querySelector('button').addEventListener('click',()=>{
       console.log('hi',div)
     div.classList.add('invisible')
     canvas.requestFullscreen();
-    // playAudio(audio);
+    playAudio(audio, true);
     init();
 });
 init();
@@ -297,8 +331,15 @@ addEventListener("keydown", ({ key }) => {
     case 'w':
     case 'ArrowUp':
       console.log("up");
-      if(player.velocity.y==0)
+      if(player.velocity.y==0){
       player.velocity.y -= 25;
+      // laserate(244)
+      if(!jumpAudio.paused){
+            jumpAudio.pause();
+            jumpAudio.currentTime = 0;
+      }
+    jumpAudio.play();
+    }
       break;
     case 'f':
      fullscreen(document.getElementById('display'));
