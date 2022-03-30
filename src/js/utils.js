@@ -35,7 +35,7 @@ function playAudio(src, loop=false){
         }, false);
     }
   }
-      myAudio.play();
+      return myAudio;
 }
 function fullscreen(canvas) {
   if (document.fullscreenElement) {

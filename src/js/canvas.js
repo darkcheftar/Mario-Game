@@ -2,6 +2,7 @@ import platform from "../img/platform.png";
 import hills from "../img/hills.png";
 import star from '../img/star.png';
 import background from "../img/background.png";
+import rocket from '../img/rocket.png'
 import { Platform, Player, GenericObject, Star} from "./main";
 import { createImage, fullscreen, playAudio,randomIntFromRange } from "./utils";
 
@@ -20,6 +21,7 @@ canvas.height = 570;
 con.width = 1024;
 con.height = 570;
 let maxScrolloffset = 16000;
+let music = playAudio(audio, true);
 let platformImage;
 let starImage;
 let jumpAudio, collectAudio;
@@ -27,7 +29,7 @@ let player = null;
 let platforms = [];
 let stars = [];
 let genericObjects = [];
-
+let rocketobj;
 let lastKey;
 
 const keys = {
@@ -47,59 +49,11 @@ function init() {
   jumpAudio = new Audio(jump);
   collectAudio = new Audio(collect);
   player = new Player(canvas);
-//   platforms = [
-//     new Platform({
-//       x:
-//         platformImage.width * 4 +
-//         300 -
-//         2 +
-//         platformImage.width -
-//         platformSmallTallImage.width,
-//       y: 270,
-//       image: createImage(platformSmallTall),
-//       canvas,
-//     }),
-
-//     new Platform({ x: -1, y: 470, image: platformImage, canvas }),
-//     new Platform({
-//       x: platformImage.width - 3,
-//       y: 470,
-//       image: platformImage,
-//       canvas,
-//     }),
-
-//     new Platform({
-//       x: platformImage.width * 2 + 100,
-//       y: 470,
-//       image: platformImage,
-//       canvas,
-//     }),
-
-//     new Platform({
-//       x: platformImage.width * 3 + 300,
-//       y: 470,
-//       image: platformImage,
-//       canvas,
-//     }),
-
-//     new Platform({
-//       x: platformImage.width * 4 + 300 - 2,
-//       y: 470,
-//       image: platformImage,
-//       canvas,
-//     }),
-
-//     new Platform({
-//       x: platformImage.width * 5 + 700 - 2,
-//       y: 470,
-//       image: platformImage,
-//       canvas,
-//     }),
-//   ];
 platforms = [];
+platforms.push(new Platform({ x: -301, y: 470, image: platformImage, canvas }))
 platforms.push(new Platform({ x: -1, y: 470, image: platformImage, canvas }))
     let o=0;
-  for(let i=0;i<29;i++){
+  for(let i=0;i<18;i++){
       o+=100;
       platforms.push(
       new Platform({
@@ -109,13 +63,13 @@ platforms.push(new Platform({ x: -1, y: 470, image: platformImage, canvas }))
         canvas,
       }))
   }
-  platforms.push(
-    new Platform({
-      x:  700+ (platformImage.width) * 30    - 2,
+new Platform({
+      x:  700+ (platformImage.width*18+300*17)  - 2,
       y: 470-Math.random()*100,
       image: platformImage,
       canvas,
-    }))
+    })
+
     stars = platforms.map(platform=>new Star({x:randomIntFromRange(platform.position.x,platform.position.x+platform.width), y:platform.position.y-100,image:starImage,canvas}));
   genericObjects = [
     new GenericObject({
@@ -129,9 +83,20 @@ platforms.push(new Platform({ x: -1, y: 470, image: platformImage, canvas }))
       y: -1,
       image: createImage(hills),
       canvas,
-    }),
+    })
   ];
-
+  rocketobj = new GenericObject({
+    x:platforms.at(-1).position.x+platforms[3].width/2,
+    y:platforms.at(-1).position.y-500,
+    image:createImage(rocket),
+    canvas
+  })
+  //headstart
+  platforms.forEach(platform=>{
+    // scrollOffset += 14640;
+     platform.position.x += 300;
+  })
+  console.log(platforms)
   scrollOffset = 0;
 }
 
@@ -151,6 +116,7 @@ function animate() {
     if (star.visible)
       star.draw();
   })
+  rocketobj.draw()
   player.update();
 
   if (keys.right.pressed && player.position.x < 400) {
@@ -176,6 +142,8 @@ function animate() {
       genericObjects.forEach((genericObject) => {
         genericObject.position.x -= player.speed * 0.66;
       });
+      rocketobj.position.x-=player.speed;
+
     } else if (keys.left.pressed && scrollOffset > 0) {
       scrollOffset -= player.speed;
       platforms.forEach((platform) => {
@@ -188,6 +156,7 @@ function animate() {
       genericObjects.forEach((genericObject) => {
         genericObject.position.x += player.speed * 0.66;
       });
+      rocketobj.position.x+=player.speed;
     }
   }
 
@@ -222,6 +191,7 @@ function animate() {
       player.position.x <= platform.position.x + platform.width
     ) {
       player.velocity.y = 0;
+      console.log(platforms.indexOf(platform))
     }
   });
   // sprite switching
@@ -261,10 +231,12 @@ function animate() {
   }
 
   // win condition
-  if (scrollOffset > 2000) {
-    console.log("You win");
+  if(scrollOffset/maxScrolloffset>0.95){
+    window.dispatchEvent(new CustomEvent('conf'));
+    c.font = "100px Arial";
+    c.fillText('You Win!!!',canvas.width/3,canvas.height/2);
   }
-
+  
   // lose condition
   if (player.position.y > canvas.height) {
     init();
@@ -275,9 +247,7 @@ function animate() {
   c.fillRect(10,10,(scrollOffset/maxScrolloffset)*100,10);
   c.font = "20px Arial";
   c.fillText(`Stars: ${player.score}`,10,50)
-  if(scrollOffset/maxScrolloffset>0.95){
-    window.dispatchEvent(new CustomEvent('conf'));
-  }
+
 }
 
 addEventListener('conf',()=>{
@@ -292,16 +262,17 @@ addEventListener('conf',()=>{
       // any other options from the global
       // confetti function
     });
+   
     setTimeout(() => {
       myConfetti.reset();
     }, 1000);
 }, {once:true});
 document.querySelector('button').addEventListener('click',()=>{
-    let div = document.querySelector('div');
+    let div = document.querySelector('.start');
       console.log('hi',div)
     div.classList.add('invisible')
-    canvas.requestFullscreen();
-    playAudio(audio, true);
+    fullscreen(document.getElementById('fullscreen'))
+    music.play()
     init();
 });
 init();
@@ -342,7 +313,16 @@ addEventListener("keydown", ({ key }) => {
     }
       break;
     case 'f':
-     fullscreen(document.getElementById('display'));
+     fullscreen(document.getElementById('fullscreen'));
+    break;
+    case 'm':
+      if(!music.paused){
+        music.pause();
+        music.currentTime = 0;
+      }else{
+        music.play();
+      }
+    break;
   }
 
   console.log(keys.right.pressed);
