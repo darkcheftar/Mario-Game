@@ -13,7 +13,7 @@ class Player {
     this.speed = 10;
     this.position = {
       x: 100,
-      y: 100,
+      y: 200,
     };
     this.velocity = {
       x: 0,

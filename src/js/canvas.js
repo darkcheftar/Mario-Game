@@ -4,7 +4,7 @@ import star from '../img/star.png';
 import background from "../img/background.png";
 import rocket from '../img/rocket.png'
 import { Platform, Player, GenericObject, Star} from "./main";
-import { createImage, fullscreen, playAudio,randomIntFromRange } from "./utils";
+import { createImage, fullscreen, isMobile, playAudio,randomIntFromRange } from "./utils";
 
 import audio from '../img/audio.mp3'
 import jump from '../img/jump.mp3'
@@ -15,7 +15,10 @@ import confetti from 'canvas-confetti';
 const canvas = document.querySelector("canvas");
 const con = document.querySelector('#con');
 const c = canvas.getContext("2d");
-
+const controls = document.getElementById('controls');
+if(isMobile()){
+  controls.classList.add('visible')
+}
 canvas.width = 1024;
 canvas.height = 570;
 con.width = 1024;
@@ -101,7 +104,6 @@ new Platform({
 }
 
 function animate() {
-  requestAnimationFrame(animate);
   c.fillStyle = "white";
   c.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -241,13 +243,14 @@ function animate() {
   if (player.position.y > canvas.height) {
     init();
   }
+  
   //stats
   c.rect(10,10,100,10);
   c.stroke();
   c.fillRect(10,10,(scrollOffset/maxScrolloffset)*100,10);
   c.font = "20px Arial";
   c.fillText(`Stars: ${player.score}`,10,50)
-
+  requestAnimationFrame(animate);
 }
 
 addEventListener('conf',()=>{
@@ -272,14 +275,14 @@ document.querySelector('button').addEventListener('click',()=>{
       console.log('hi',div)
     div.classList.add('invisible')
     fullscreen(document.getElementById('fullscreen'))
-    music.play()
+    // music.play()
     init();
 });
 init();
 animate();
 
-addEventListener("keydown", ({ key }) => {
-  // console.log(keyCode)
+addEventListener('game-control-down',({detail:key})=>{
+  console.log(key);
   switch (key) {
     case 'a':
     case 'ArrowLeft':
@@ -325,10 +328,8 @@ addEventListener("keydown", ({ key }) => {
     break;
   }
 
-  console.log(keys.right.pressed);
-});
-
-addEventListener("keyup", ({ key }) => {
+})
+addEventListener('game-control-up',({detail:key})=>{
   // console.log(keyCode)
   switch (key) {
     case 'a':
@@ -356,4 +357,29 @@ addEventListener("keyup", ({ key }) => {
   }
 
   console.log(keys.right.pressed);
+})
+addEventListener("keydown", ({ key }) => {
+  window.dispatchEvent(new CustomEvent('game-control-down',{'detail':key}));
 });
+
+addEventListener("keyup", ({ key }) => {
+  window.dispatchEvent(new CustomEvent('game-control-up',{'detail':key}));
+});
+document.querySelector('#right').addEventListener('touchstart',()=>{
+  window.dispatchEvent(new CustomEvent('game-control-down',{'detail':'d'}));
+})
+document.querySelector('#right').addEventListener('touchend',()=>{
+  window.dispatchEvent(new CustomEvent('game-control-up',{'detail':'d'}));
+})
+document.querySelector('#up').addEventListener('touchstart',(e)=>{
+  window.dispatchEvent(new CustomEvent('game-control-down',{'detail':'w'}));
+  e.stopPropagation();
+})
+document.querySelector('#up').addEventListener('touchend',(e)=>{
+  window.dispatchEvent(new CustomEvent('game-control-down',{'detail':'w'}));
+  e.stopPropagation();
+})
+// ?.addEventListenerListener('click',()=>{
+//   alert('hi')
+//   window.dispatchEvent(new CustomEvent('game-control-up',{'detail':'w'}));
+// })

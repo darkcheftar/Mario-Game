@@ -52,9 +52,41 @@
       #con{
         z-index: 1;
       }
+      .control{
+        background-color: red;
+        height:100px;
+        width: 100px;
+      }
+      #controls{
+        z-index: 4;
+        display: none;
+        position: absolute;
+        right: 20px;
+        bottom:20px;
+      
+        width: 100%;
+        height: 100px;
+      
+      }
+      #controls.visible{
+        display: flex;
+        justify-content: space-between;
+      }
+      
+      @media only screen and (max-width: 600px) {
+        canvas {
+          width: 100%;
+          height: auto;
+        }
+        .startbutton{
+          display: none;
+        }
+
+      }
     </style>
 </head>
   <body>
+    
     <div class="start">
       <button class="startbutton">
         Start Game
@@ -63,6 +95,17 @@
     <div id="fullscreen">
     <canvas></canvas>
     <canvas id="con"></canvas>
+    <div id="controls">
+      <div class="control" id="up">
+
+      </div>
+      <div class="control" id="left">
+
+      </div>
+      <div class="control" id="right">
+
+      </div>
+    </div>
   </div>
   </body>
 </html>

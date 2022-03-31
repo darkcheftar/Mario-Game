@@ -46,4 +46,14 @@ function fullscreen(canvas) {
     canvas.requestFullscreen();
   }
 }
-module.exports = { randomIntFromRange, randomColor, distance, createImage, playAudio, fullscreen }
+
+function isMobile(){
+  let details = navigator.userAgent;
+  let regexp = /android|iphone|kindle|ipad/i;
+
+  return regexp.test(details);
+}
+
+
+
+module.exports = { randomIntFromRange, randomColor, distance, createImage, playAudio, fullscreen, isMobile }
